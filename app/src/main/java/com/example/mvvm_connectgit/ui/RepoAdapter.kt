@@ -6,13 +6,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvm_connectgit.data.model.Repo
 import com.example.mvvm_connectgit.databinding.RepoItemBinding
-import com.bumptech.glide.Glide
 
 
-internal class RepoAdapter internal constructor(private val items: MutableList<Repo>) :
+class RepoAdapter constructor(private val items: MutableList<Repo>) :
     RecyclerView.Adapter<RepoAdapter.RepoViewHolder>() {
-    internal inner class RepoViewHolder(internal val binding: RepoItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+
+    inner class RepoViewHolder(private val binding: RepoItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+            fun bind(repo: Repo) {
+                binding.repo = repo
+                binding.executePendingBindings()
+            }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -21,13 +26,15 @@ internal class RepoAdapter internal constructor(private val items: MutableList<R
     }
 
     override fun onBindViewHolder(holder: RepoViewHolder, position: Int) {
-        val (_, _, fullName, description, stars, owner) = items[position]
-        Glide.with(holder.itemView.context)
-            .load(owner.avatarUrl)
-            .into(holder.binding.ownerAvatar)
-        holder.binding.name.text = fullName
-        holder.binding.desc.text = description
-        holder.binding.stars.text = "" + stars
+        var repo = items[position]
+        holder.bind(repo)
+        //在RepoBindings中有自定義binding方法 故這裡可以拿掉
+//        Glide.with(holder.itemView.context)
+//            .load(repo.owner.avatarUrl)
+//            .into(holder.binding.ownerAvatar)
+//        holder.binding.name.text = repo.fullName
+//        holder.binding.desc.text = repo.description
+//        holder.binding.stars.text = "" + repo.stars
     }
 
     override fun getItemCount(): Int {
@@ -47,7 +54,7 @@ internal class RepoAdapter internal constructor(private val items: MutableList<R
         result.dispatchUpdatesTo(this)
     }
 
-    private inner class RepoDiffCallback internal constructor(
+    private inner class RepoDiffCallback constructor(
         private val mOldList: List<Repo>?,
         private val mNewList: List<Repo>?
     ) :
