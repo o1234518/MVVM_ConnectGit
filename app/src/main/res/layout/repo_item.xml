@@ -25,7 +25,6 @@
                 android:layout_marginStart="8dp"
                 android:scaleType="fitCenter"
                 app:imageUrl="@{repo.owner.avatarUrl}"
-                app:holder="@{@drawable/ic_launcher_foreground}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
